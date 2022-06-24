@@ -14,7 +14,7 @@ wss.on('connection', (ws) => {
   const duplex = createWebSocketStream(ws, {encoding: 'utf8', decodeStrings: false});
   duplex.on('data', (chunk) => {
     console.log(chunk);
-    const [command, value] = chunk.split(' ');
+    const [command, value, rest] = chunk.split(' ');
     if (command === 'mouse_position') {
       const { x, y } = robot.getMousePos();
       const message = `mouse_position ${x},${y}`
@@ -45,19 +45,46 @@ wss.on('connection', (ws) => {
       duplex.write(`${command} ${x},${y}\0`, 'utf8');
     }
     if (command === 'draw_circle') {
-      const { x, y } = robot.getMousePos();
+      const mousePos = robot.getMousePos();
+      robot.mouseToggle("down")
+      for (let i = 0; i <= Math.PI * 2; i += 0.02) {
+        const x = mousePos.x + value * Math.cos(i) - value;
+        const y = mousePos.y + value * Math.sin(i);
+        robot.dragMouse(x, y);
+      }
+      robot.mouseToggle("up")
+
+      duplex.write(`${command}\0`, 'utf8');
+    }
+    if (command === 'draw_square') {
+      let { x, y } = robot.getMousePos();
+      robot.mouseToggle('down');
+      x += +value;
+      robot.moveMouseSmooth(x, y);
+      y += +value;
+      robot.moveMouseSmooth(x - 2, y);
+      x -= +value + 2;
+      robot.moveMouseSmooth(x, y - 2);
+      y -= +value + 2;
+      robot.moveMouseSmooth(x + 2, y);
+      robot.mouseToggle('up');
+      duplex.write(`${command} ${x},${y}\0`, 'utf8');
+    }
+    if (command === 'draw_rectangle') {
+      let { x, y } = robot.getMousePos();
+      robot.mouseToggle('down');
+      x += +value;
+      robot.moveMouseSmooth(x, y);
+      y += +rest;
+      robot.moveMouseSmooth(x - 2, y);
+      x -= +value + 2;
+      robot.moveMouseSmooth(x, y - 2);
+      y -= +rest + 2;
+      robot.moveMouseSmooth(x + 2, y);
+      robot.mouseToggle('up');
       duplex.write(`${command} ${x},${y}\0`, 'utf8');
     }
   })
 })
 
-wss.on('close', () => {
-  
-})
-
-// for (let i = 0; i <= Math.PI * 2; i += 0.02) {
-//   const x = mousePos.x + multiplier * Math.cos(i);
-//   const y = mousePos.y + multiplier * Math.sin(i);
-
-//   robot.dragMouse(x, y);
-// }
+wss.on('close', () => {})
