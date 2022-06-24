@@ -1,0 +1,82 @@
+{
+    "env": {
+        "es2021": true,
+        "node": true
+    },
+    "root": true,
+    "ignorePatterns": ["projects/**/*"],
+    "overrides": [
+        {
+            "files": ["*.ts"],
+            "parserOptions": {
+                "project": ["CRUD-API/tsconfig.json"],
+                "createDefaultProgram": true
+            }
+        }
+    ],
+    "workingDirectories": [
+        "./src"
+    ],
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "airbnb-base",
+        "plugin:prettier/recommended",
+        "prettier",
+        "plugin: import/errors",
+        "plugin: import/typescript",
+        "plugin: import/warnings",
+        "airbnb-typescript/base"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaVersion": 2021,
+        "sourceType": "module",
+        "project": "./tsconfig.json"
+    },
+    "plugins": [
+        "@typescript-eslint",
+        "import",
+        "prettier"
+    ],
+    "rules": {
+        "eol-last": 2,
+        "import/extensions": "off",
+        "import/no-unresolved": "error",
+        "@typescript-eslint/no-explicit-any": "error",
+        "@typescript-eslint/comma-dangle": "off",
+        "no-console": 0,
+        "prettier/prettier": [
+            "error",
+            {
+                "trailingComma": "es6",
+                "endOfLine": "auto",
+                "tabWidth": 2,
+                "semi": true,
+                "singleQuote": true,
+                "printWidth": 120
+            }
+        ],
+        "import/order" : [
+            "error",
+            {
+                "newlines-between": "newer",
+                "groups": [
+                    ["builtin", "external"],
+                    ["internal", "parent", "sibling", "index"]
+                ]
+            }
+        ]
+    },
+    "settings": {
+        "import/parser" : {
+            "@typescript-eslint/parser" : [".ts"]
+        },
+        "import/resolver" : {
+            "typescript": {
+                "alwaysTryTypes": true,
+                "project": "./tsconfig.json"
+            }
+        }
+    }
+}

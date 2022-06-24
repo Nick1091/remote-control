@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "strict": true,                                    
+    "lib": ["esnext", "dom"],
+    "module": "commonjs",
+    "target": "es2021",                              
+    "rootDir": "./",
+    "outDir": "dist", 
+    "baseUrl": "./",
+    "allowJs": true, 
+    "removeComments": true,
+    "allowSyntheticDefaultImports": true,                        
+    "moduleResolution": "node",
+    "esModuleInterop": true,  
+    "forceConsistentCasingInFileNames": true, 
+    "noImplicitAny": true,      
+    "skipLibCheck": true,
+    "sourceMap": false,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true                      
+  },
+  "exclude": ["node_modules", "src/**/*.spec.ts", "dist"],
+  "display": "Node 16",
+  // "include": [
+  //   "src/**/*"
+  // ],
+}
