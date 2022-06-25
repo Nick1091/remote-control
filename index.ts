@@ -12,7 +12,7 @@ const wss = new WebSocketServer({ port: 8080 })
 
 wss.on('connection', (ws) => {
   const duplex = createWebSocketStream(ws, {encoding: 'utf8', decodeStrings: false});
-  duplex.on('data', (chunk) => {
+  duplex.on('data', async (chunk) => {
     console.log(chunk);
     const [command, value, rest] = chunk.split(' ');
     if (command === 'mouse_position') {
@@ -83,6 +83,24 @@ wss.on('connection', (ws) => {
       robot.moveMouseSmooth(x + 2, y);
       robot.mouseToggle('up');
       duplex.write(`${command} ${x},${y}\0`, 'utf8');
+    }
+    if (command === 'prnt_scrn') {
+      let { x, y } = robot.getMousePos();
+      let size = 200;
+      try {
+        let img = robot.screen.capture(x - size/2, y - size/2, size, size);
+        img.image.forEach((buff: Buffer, i: number) => {
+          if (i % 4 === 0) {  
+            return [img.image[i], img.image[i + 2]] = [img.image[i + 2],img.image[i]] // bgr -> rgb color
+          }
+        });
+        const jimp = new Jimp({ data: img.image, width: img.width, height: img.height });
+        const base64Image = await jimp.getBase64Async(Jimp.MIME_PNG);
+        const image = base64Image.split(',')[1];
+        duplex.write(`${command} ${image}\0`);
+      } catch (error) {
+        console.log(error);
+      }
     }
   })
 })
