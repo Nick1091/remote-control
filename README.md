@@ -1,6 +1,7 @@
 # Websocket Remote Control
 ## Description
   implementation remote control backend using RobotJS library and websocket
+  Repo includes frontend files
 
   The backend can do the following:
 
